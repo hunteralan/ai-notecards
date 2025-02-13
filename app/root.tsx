@@ -5,10 +5,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "react-router";
-
 import type { Route } from "./+types/root";
 import "./app.css";
+import { SidebarLayout } from "./components/base/sidebar-layout";
+import { Navbar } from "./components/extensions/navbar";
+import React from "react";
+import { getUserFromSession } from "./services/session.server";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -22,6 +26,11 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export async function loader({ request }: Route.LoaderArgs) {
+  const user = await getUserFromSession(request);
+  return user;
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -42,7 +51,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const user = useLoaderData<typeof loader>();
+  return user ? (
+    <SidebarLayout navbar={null} sidebar={<Navbar picture={user.picture} />}>
+      <Outlet />
+    </SidebarLayout>
+  ) : (
+    <Outlet />
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

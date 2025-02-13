@@ -1,25 +1,15 @@
-import { Text } from "~/components/text";
+import { Text } from "~/components/base/text";
 import type { Route } from "./+types/home";
-import { Input } from "~/components/input";
-import { Form, useFetcher } from "react-router";
-import { Button } from "~/components/button";
-import {
-  FileUpload,
-  parseFormData,
-  type FileUploadHandler,
-} from "@mjackson/form-data-parser";
-import { StackedLayout } from "~/components/stacked-layout";
-import { Heading } from "~/components/heading";
-import { Divider } from "~/components/divider";
-import { fileUploadHandler } from "~/helpers/fileUploadHandler";
-import getOpenAiClient from "~/helpers/getOpenAIClient";
-import OpenAI from "openai";
-import { Label } from "~/components/fieldset";
-import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod.mjs";
+import { Input } from "~/components/base/input";
+import { redirect, useFetcher } from "react-router";
+import { Button } from "~/components/base/button";
+import { Heading } from "~/components/base/heading";
+import { Divider } from "~/components/base/divider";
 import type { Flashcard } from "~/types/flashcard";
-import { Card } from "~/components/card";
-import { Navbar, NavbarItem } from "~/components/navbar";
+import { Card } from "~/components/base/card";
+import { parseFlashcardForm } from "~/helpers/formDataParsers/parseFlashcardForm";
+import { generateFlashcards } from "~/operations/generateFlashcards";
+import { getUserFromSession } from "~/services/session.server";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -28,75 +18,29 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const flashcard = z.object({
-  cards: z.array(z.object({ question: z.string(), answer: z.string() })),
-});
+export async function loader({ request }: Route.LoaderArgs) {
+  const user = await getUserFromSession(request);
+  const signedIn = !!user;
+  if (!signedIn) {
+    return redirect("/auth/signIn");
+  }
+  return;
+}
 
 export async function action({ request }: Route.ActionArgs) {
-  const formData = await parseFormData(request, fileUploadHandler);
+  const args = await parseFlashcardForm(request);
 
-  const client = getOpenAiClient();
-  const numCards = formData.get("numCards");
-  const subject = formData.get("subject");
-  const notes = formData.getAll("notes");
-
-  const content: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
-    {
-      type: "text",
-      text: `What I need: ${numCards} flashcards based on the most important information contained within the photo.
-      Subject: ${subject}
-      `,
-    },
-  ];
-
-  for (const note of notes) {
-    content.push({
-      type: "image_url",
-      image_url: { url: note.toString() },
-    });
-  }
-
-  const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "user",
-        content,
-      },
-    ],
-    store: true,
-    response_format: zodResponseFormat(flashcard, "flashcard"),
-  });
-
-  const unparsedCards = response.choices[0].message.content;
-
-  if (!unparsedCards) {
-    return [];
-  }
-
-  const flashcards: { cards: Flashcard[] } = JSON.parse(unparsedCards);
-
-  console.log(flashcards.cards);
-
-  return flashcards.cards;
+  return generateFlashcards(args);
 }
 
 export default function Home() {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<Flashcard[]>();
   const busy = fetcher.state !== "idle";
+
   return (
-    <StackedLayout
-      navbar={
-        <Navbar>
-          <NavbarItem href="/">Home</NavbarItem>
-          <NavbarItem href="/me/notecards">Your Notecards</NavbarItem>
-          <NavbarItem href="/me/classes">Your Classes</NavbarItem>
-        </Navbar>
-      }
-      sidebar={<></>}
-    >
+    <>
       <div className="mb-4">
-        <Heading>Notecard Generator</Heading>
+        <Heading>Generate more notecards</Heading>
         <div className="mt-2">
           <Text>Its simple! Upload a picture and get notecards back!</Text>
         </div>
@@ -163,10 +107,10 @@ export default function Home() {
 
       <div className="overflow-x-auto flex gap-3">
         {fetcher.data &&
-          fetcher.data.map((d: Flashcard) => (
+          fetcher.data.map((d) => (
             <Card question={d.question} answer={d.answer} />
           ))}
       </div>
-    </StackedLayout>
+    </>
   );
 }
