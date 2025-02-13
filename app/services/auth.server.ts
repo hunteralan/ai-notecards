@@ -27,8 +27,6 @@ authenticator.use(
       // here you can use the params above to get the user and return it
       // what you do inside this and how you find the user is up to you
 
-      console.log(tokens, request);
-
       const idToken = tokens.idToken();
       const decodedToken = decode(idToken) as GoogleIdToken;
 
