@@ -25,6 +25,8 @@ model User {
   emailVerified Boolean
 
   imageGroups UploadGroup[]
+
+  Class Class[]
 }
 
 model File {
@@ -47,6 +49,9 @@ model UploadGroup {
   createdById Int
   createdBy User @relation(fields: [createdById], references: [id])
 
+  classId Int
+  class Class @relation(fields: [classId], references: [id])
+
   images File[]
   noteCards NoteCard[]
 }
@@ -61,4 +66,18 @@ model NoteCard {
 
   imageGroupId Int
   imageGroup UploadGroup @relation(fields: [imageGroupId], references: [id])
+}
+
+model Class {
+  id Int @default(autoincrement()) @id
+
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+
+  className String
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  UploadGroup UploadGroup[]
 }

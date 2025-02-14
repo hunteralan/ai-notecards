@@ -1,7 +1,7 @@
 import { Text } from "~/components/base/text";
 import type { Route } from "./+types/home";
 import { Input } from "~/components/base/input";
-import { redirect, useFetcher } from "react-router";
+import { redirect, useFetcher, type MetaFunction } from "react-router";
 import { Button } from "~/components/base/button";
 import { Heading } from "~/components/base/heading";
 import { Divider } from "~/components/base/divider";
@@ -9,22 +9,14 @@ import type { Flashcard } from "~/types/flashcard";
 import { Card } from "~/components/base/card";
 import { parseFlashcardForm } from "~/helpers/formDataParsers/parseFlashcardForm";
 import { generateFlashcards } from "~/operations/generateFlashcards";
-import { getUserFromSession } from "~/services/session.server";
+import { requireAuthentication } from "~/services/auth.server";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
+export function meta(): ReturnType<MetaFunction> {
+  return [{ title: "CardCrafter - Home" }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const user = await getUserFromSession(request);
-  const signedIn = !!user;
-  if (!signedIn) {
-    return redirect("/auth/signIn");
-  }
-  return;
+  await requireAuthentication(request);
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -38,22 +30,13 @@ export default function Home() {
   const busy = fetcher.state !== "idle";
 
   return (
-    <>
+    <div>
       <div className="mb-4">
-        <Heading>Generate more notecards</Heading>
+        <Heading>Generate more flashcards</Heading>
         <div className="mt-2">
           <Text>Its simple! Upload a picture and get notecards back!</Text>
         </div>
         <Divider className="my-2" />
-        <Text>Class Subject</Text>
-        <Input
-          required
-          type="text"
-          minLength={3}
-          name="subject"
-          placeholder="Enter subject..."
-          className="mb-4"
-        />
         <fetcher.Form method="post" encType="multipart/form-data">
           <Text>Select an image to upload...</Text>
           <Input
@@ -111,6 +94,6 @@ export default function Home() {
             <Card question={d.question} answer={d.answer} />
           ))}
       </div>
-    </>
+    </div>
   );
 }

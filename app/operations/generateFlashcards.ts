@@ -3,19 +3,16 @@ import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import getOpenAiClient from "~/helpers/getOpenAIClient";
 import type { CreateFlashcardArgs } from "~/types/createFlashcardArgs";
 import type { Flashcard } from "~/types/flashcard";
-import { flashcard } from "~/validators/flashcards";
+import { flashcards as flashcardsSchema } from "~/schemas/flashcards";
 
 export async function generateFlashcards({
   notes,
   numCards,
-  subject,
 }: CreateFlashcardArgs) {
   const content: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
     {
       type: "text",
-      text: `What I need: ${numCards} flashcards based on the most important information contained within the photo.
-          Subject: ${subject}
-          `,
+      text: `I need ${numCards} flashcards based on the most important information contained within the photo`,
     },
   ];
 
@@ -36,7 +33,7 @@ export async function generateFlashcards({
       },
     ],
     store: true,
-    response_format: zodResponseFormat(flashcard, "flashcard"),
+    response_format: zodResponseFormat(flashcardsSchema, "flashcard"),
   });
 
   const unparsedCards = response.choices[0].message.content;

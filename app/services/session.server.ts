@@ -17,8 +17,13 @@ const { getSession, commitSession, destroySession } =
 
 export { getSession, commitSession, destroySession };
 
-export async function getUserFromSession(request: Request) {
+export async function getSessionFromRequest(request: Request) {
   const session = await getSession(request.headers.get("Cookie"));
+  return session;
+}
+
+export async function getUserFromSession(request: Request) {
+  const session = await getSessionFromRequest(request);
   const user = session.get("user");
 
   return user;

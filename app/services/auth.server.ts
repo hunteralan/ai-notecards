@@ -1,10 +1,10 @@
 import { Authenticator } from "remix-auth";
 import { OAuth2Strategy, CodeChallengeMethod } from "remix-auth-oauth2";
 import { Provider } from "~/constants/providers";
-import { decode } from "jsonwebtoken";
 import type { User } from "@prisma/client";
-import type { GoogleIdToken } from "~/types/googleIdToken";
-import { getPrismaClient } from "~/helpers/getPrismaClient";
+import { signIn } from "~/operations/signIn";
+import { getUserFromSession } from "./session.server";
+import { redirect } from "react-router";
 
 export const authenticator = new Authenticator<User>();
 
@@ -23,35 +23,17 @@ authenticator.use(
       scopes: ["openid", "email", "profile"], // optional
       codeChallengeMethod: CodeChallengeMethod.S256, // optional
     },
-    async ({ tokens, request }) => {
-      // here you can use the params above to get the user and return it
-      // what you do inside this and how you find the user is up to you
-
-      const idToken = tokens.idToken();
-      const decodedToken = decode(idToken) as GoogleIdToken;
-
-      const prisma = getPrismaClient();
-
-      let user = await prisma.user.findUnique({
-        where: { email: decodedToken.email },
-      });
-
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            email: decodedToken.email,
-            emailVerified: decodedToken.email_verified,
-            familyName: decodedToken.family_name,
-            givenName: decodedToken.given_name,
-            picture: decodedToken.picture,
-          },
-        });
-      }
-
-      return user;
-    }
+    signIn
   ),
   // this is optional, but if you setup more than one OAuth2 instance you will
   // need to set a custom name to each one
   Provider.GOOGLE
 );
+
+export async function requireAuthentication(request: Request): Promise<User> {
+  const user = await getUserFromSession(request);
+  if (!user) {
+    throw redirect("/auth/signIn");
+  }
+  return user;
+}
