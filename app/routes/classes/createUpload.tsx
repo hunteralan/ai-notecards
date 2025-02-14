@@ -1,7 +1,6 @@
 import { Divider } from "~/components/base/divider";
 import { Heading } from "~/components/base/heading";
 import { Text } from "~/components/base/text";
-import type { Route } from "./+types";
 import type { Flashcard } from "~/types/flashcard";
 import { redirect, useFetcher } from "react-router";
 import { Input } from "~/components/base/input";
@@ -11,6 +10,7 @@ import { parseFormData } from "~/helpers/parseFormData";
 import { newUploadGroup } from "~/schemas/newUploadGroup";
 import { generateFlashcardRespone } from "~/operations/generateFlashcardResponse";
 import { saveUploadGroup } from "~/operations/saveUploadGroup";
+import type { Route } from "./+types/createUpload";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const user = await requireAuthentication(request);
@@ -26,7 +26,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   const flashcards = await generateFlashcardRespone(numCards, filesArray);
 
-  const classId = params.classId as string;
+  const classId = params.classId;
   const parsedClassId = parseInt(classId);
 
   await saveUploadGroup(

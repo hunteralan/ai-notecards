@@ -22,4 +22,6 @@ export default [
       route("createUpload", "routes/classes/createUpload.tsx"),
     ]),
   ]),
+
+  ...prefix("uploads", [route(":uploadId", "routes/uploads/index.tsx")]),
 ] satisfies RouteConfig;

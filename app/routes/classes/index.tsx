@@ -47,7 +47,7 @@ export default function Index() {
         </TableHead>
         <TableBody>
           {classes.map((c) => (
-            <TableRow>
+            <TableRow key={c.id}>
               <TableCell>{c.className}</TableCell>
               <TableCell align="right">
                 <Button color="blue" href={`/classes/${c.id}`}>

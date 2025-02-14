@@ -14,7 +14,7 @@ import {
 } from "~/components/base/table";
 import { Button } from "~/components/base/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const user = await requireAuthentication(request);
@@ -74,17 +74,20 @@ export default function ViewClass() {
             <TableHeader># of attachments</TableHeader>
             <TableHeader># of Notecards</TableHeader>
             <TableHeader>Uploaded At</TableHeader>
-            <TableHeader>Actions</TableHeader>
+            <TableHeader />
           </TableHead>
           <TableBody>
             {classDetails.UploadGroup.map((ug) => (
-              <TableRow>
+              <TableRow key={ug.id}>
                 <TableCell>{ug.name}</TableCell>
                 <TableCell>{ug._count.files}</TableCell>
                 <TableCell>{ug._count.noteCards}</TableCell>
                 <TableCell>{ug.createdAt.toDateString()}</TableCell>
-                <TableCell>
-                  <Button>Go to upload</Button>
+                <TableCell align="right">
+                  <Button color="blue" href={`/uploads/${ug.id}`}>
+                    Go to upload
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
