@@ -17,5 +17,9 @@ export default [
   ...prefix("classes", [
     index("routes/classes/index.tsx"),
     route("new", "routes/classes/new.tsx"),
+    ...prefix(":classId", [
+      index("routes/classes/viewClass.tsx"),
+      route("createUpload", "routes/classes/createUpload.tsx"),
+    ]),
   ]),
 ] satisfies RouteConfig;

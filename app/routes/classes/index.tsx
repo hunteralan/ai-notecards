@@ -50,7 +50,7 @@ export default function Index() {
             <TableRow>
               <TableCell>{c.className}</TableCell>
               <TableCell align="right">
-                <Button color="blue">
+                <Button color="blue" href={`/classes/${c.id}`}>
                   Go to class
                   <FontAwesomeIcon icon={faArrowRight} />
                 </Button>

@@ -20,7 +20,7 @@ export function Navbar({ picture }: Props) {
       <SidebarHeader>CardCrafter</SidebarHeader>
       <SidebarBody>
         <SidebarItem href="/">Home</SidebarItem>
-        <SidebarItem href="/classes">Your Classes</SidebarItem>
+        <SidebarItem href="/classes">My Classes</SidebarItem>
       </SidebarBody>
       <SidebarFooter>
         <SidebarItem href="/profile">

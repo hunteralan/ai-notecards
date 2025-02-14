@@ -24,7 +24,7 @@ model User {
   picture String
   emailVerified Boolean
 
-  imageGroups UploadGroup[]
+  uploadGroups UploadGroup[]
 
   Class Class[]
 }
@@ -34,11 +34,11 @@ model File {
 
   createdAt DateTime @default(now())
 
-  imageData Bytes
+  fileData Bytes
   mimeType String
 
-  imageGroupId Int
-  imageGroup UploadGroup @relation(fields: [imageGroupId], references: [id])
+  uploadGroupId Int
+  uploadGroup UploadGroup @relation(fields: [uploadGroupId], references: [id])
 }
 
 model UploadGroup {
@@ -46,13 +46,15 @@ model UploadGroup {
 
   createdAt DateTime @default(now())
 
+  name String
+
   createdById Int
   createdBy User @relation(fields: [createdById], references: [id])
 
   classId Int
   class Class @relation(fields: [classId], references: [id])
 
-  images File[]
+  files File[]
   noteCards NoteCard[]
 }
 
@@ -64,8 +66,8 @@ model NoteCard {
   question String
   answer String
 
-  imageGroupId Int
-  imageGroup UploadGroup @relation(fields: [imageGroupId], references: [id])
+  uploadGroupId Int
+  uploadGroup UploadGroup @relation(fields: [uploadGroupId], references: [id])
 }
 
 model Class {

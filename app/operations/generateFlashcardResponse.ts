@@ -1,14 +1,14 @@
 import type OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import getOpenAiClient from "~/helpers/getOpenAIClient";
-import type { CreateFlashcardArgs } from "~/types/createFlashcardArgs";
 import type { Flashcard } from "~/types/flashcard";
 import { flashcards as flashcardsSchema } from "~/schemas/flashcards";
+import { getFileDataUrl } from "~/helpers/getFileDataUrl";
 
-export async function generateFlashcards({
-  notes,
-  numCards,
-}: CreateFlashcardArgs) {
+export async function generateFlashcardRespone(
+  numCards: number,
+  files: File[]
+) {
   const content: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
     {
       type: "text",
@@ -16,10 +16,10 @@ export async function generateFlashcards({
     },
   ];
 
-  for (const note of notes) {
+  for (const file of files) {
     content.push({
       type: "image_url",
-      image_url: { url: note.toString() },
+      image_url: { url: await getFileDataUrl(file) },
     });
   }
 
