@@ -19,7 +19,8 @@ export async function saveUploadGroup(
         createMany: {
           data: await Promise.all(
             files.map(async (fb) => {
-              const blob = await fb.bytes();
+              const buffer = await fb.arrayBuffer();
+              const blob = new Uint8Array(buffer);
 
               return {
                 fileData: blob,
