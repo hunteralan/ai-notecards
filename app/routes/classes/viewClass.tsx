@@ -1,6 +1,5 @@
 import { requireAuthentication } from "~/services/auth.server";
 import type { Route } from "./+types";
-import { getPrismaClient } from "~/helpers/getPrismaClient";
 import { redirect, useLoaderData } from "react-router";
 import { Text } from "~/components/base/text";
 import { Divider } from "~/components/base/divider";
@@ -15,30 +14,16 @@ import {
 import { Button } from "~/components/base/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Breadcrumbs } from "~/components/base/breadcrumbs";
+import { getClassDetailsById } from "~/operations/getClassDetailsById";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const user = await requireAuthentication(request);
 
-  const prisma = getPrismaClient();
-
-  const classDetails = await prisma.class.findFirst({
-    where: {
-      id: parseInt(params.classId as string),
-      userId: user.id,
-    },
-    include: {
-      UploadGroup: {
-        include: {
-          _count: {
-            select: {
-              files: true,
-              noteCards: true,
-            },
-          },
-        },
-      },
-    },
-  });
+  const classDetails = await getClassDetailsById(
+    parseInt(params.classId!),
+    user.id
+  );
 
   if (!classDetails) {
     return redirect("/classes");
@@ -51,6 +36,17 @@ export default function ViewClass() {
   const classDetails = useLoaderData<typeof loader>();
   return (
     <div>
+      <Breadcrumbs
+        pages={[
+          { current: false, href: "/classes", name: "Classes" },
+          {
+            current: true,
+            href: `/classes/${classDetails.id}`,
+            name: classDetails.className,
+          },
+        ]}
+        className="mb-4"
+      />
       <div className="flex items-center justify-between">
         <div>
           <Text>Subject</Text>

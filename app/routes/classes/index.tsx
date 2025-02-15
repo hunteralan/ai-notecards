@@ -15,6 +15,9 @@ import type { Route } from "./+types";
 import { NewClassModal } from "~/components/extensions/newClassModal";
 import { useState } from "react";
 import { getClassesByUserId } from "~/operations/getClassesByUserId";
+import { Text } from "~/components/base/text";
+import { Divider } from "~/components/base/divider";
+import { Breadcrumbs } from "~/components/base/breadcrumbs";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await requireAuthentication(request);
@@ -29,10 +32,14 @@ export default function Index() {
 
   return (
     <div>
-      <div className="flex justify-end mb-4">
+      <Breadcrumbs
+        pages={[{ current: true, href: "/classes", name: "Classes" }]}
+        className="mb-4"
+      />
+      <div className="flex items-center justify-end mb-4">
         <Button
           onClick={() => setCreatingNewClassOpen(true)}
-          className="flex gap-1 px-8!"
+          className="flex gap-1"
           color="green"
           type="submit"
         >
@@ -40,25 +47,29 @@ export default function Index() {
           Add Class
         </Button>
       </div>
-      <Table>
-        <TableHead>
-          <TableHeader>Class Name</TableHeader>
-          <TableHeader align="right">Actions</TableHeader>
-        </TableHead>
-        <TableBody>
-          {classes.map((c) => (
-            <TableRow key={c.id}>
-              <TableCell>{c.className}</TableCell>
-              <TableCell align="right">
-                <Button color="blue" href={`/classes/${c.id}`}>
-                  Go to class
-                  <FontAwesomeIcon icon={faArrowRight} />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {classes.length ? (
+        <Table>
+          <TableHead>
+            <TableHeader>Class Name</TableHeader>
+            <TableHeader align="right">Actions</TableHeader>
+          </TableHead>
+          <TableBody>
+            {classes.map((c) => (
+              <TableRow key={c.id}>
+                <TableCell>{c.className}</TableCell>
+                <TableCell align="right">
+                  <Button color="blue" href={`/classes/${c.id}`}>
+                    Go to class
+                    <FontAwesomeIcon icon={faArrowRight} />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <Text>There are no classes...</Text>
+      )}
 
       <NewClassModal
         open={creatingNewClass}

@@ -53,7 +53,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const user = useLoaderData<typeof loader>();
   return user ? (
-    <SidebarLayout navbar={null} sidebar={<Navbar picture={user.picture} />}>
+    <SidebarLayout
+      navbar={null}
+      sidebar={
+        <Navbar
+          picture={user.picture}
+          name={`${user.givenName} ${user.familyName}`}
+        />
+      }
+    >
       <Outlet />
     </SidebarLayout>
   ) : (

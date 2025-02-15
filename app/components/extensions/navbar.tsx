@@ -12,9 +12,10 @@ import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
   picture: string;
+  name: string;
 };
 
-export function Navbar({ picture }: Props) {
+export function Navbar({ picture, name }: Props) {
   return (
     <Sidebar>
       <SidebarHeader>CardCrafter</SidebarHeader>
@@ -23,9 +24,9 @@ export function Navbar({ picture }: Props) {
         <SidebarItem href="/classes">My Classes</SidebarItem>
       </SidebarBody>
       <SidebarFooter>
-        <SidebarItem href="/profile">
+        <SidebarItem disabled>
           <Avatar src={picture} />
-          Profile
+          {name}
         </SidebarItem>
         <SidebarItem href="/auth/logout">
           <FontAwesomeIcon icon={faRightToBracket} />

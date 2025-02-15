@@ -17,25 +17,19 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   const formData = await request.formData();
 
-  const { files, numCards, uploadName } = await parseFormData(
+  const files = formData.getAll("files") as File[];
+
+  const { numCards, uploadName } = await parseFormData(
     formData,
     newUploadGroup
   );
 
-  const filesArray = Array.isArray(files) ? files : [files];
-
-  const flashcards = await generateFlashcardRespone(numCards, filesArray);
+  const flashcards = await generateFlashcardRespone(numCards, files);
 
   const classId = params.classId;
   const parsedClassId = parseInt(classId);
 
-  await saveUploadGroup(
-    parsedClassId,
-    uploadName,
-    user.id,
-    filesArray,
-    flashcards
-  );
+  await saveUploadGroup(parsedClassId, uploadName, user.id, files, flashcards);
 
   return redirect(`/classes/${classId}`);
 }
@@ -91,7 +85,6 @@ export default function CreateUpload() {
                 cy="12"
                 r="10"
                 stroke="currentColor"
-                stroke-width="4"
               ></circle>
               <path
                 className="opacity-75"
