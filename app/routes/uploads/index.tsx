@@ -1,5 +1,4 @@
 import { requireAuthentication } from "~/services/auth.server";
-import { getPrismaClient } from "~/helpers/getPrismaClient";
 import type { Route } from "./+types";
 import { useLoaderData } from "react-router";
 import { Notecard } from "~/components/extensions/notecard";
@@ -12,9 +11,9 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import { Text } from "~/components/base/text";
-import { Divider } from "~/components/base/divider";
 import { useState } from "react";
 import { getUploadGroupbyId } from "~/operations/getUploadGroupById";
+import { Tabs } from "~/components/extensions/Tabs";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const user = await requireAuthentication(request);
@@ -52,38 +51,62 @@ export default function Index() {
         ]}
         className="mb-4"
       />
-      <div>
-        <div className="">
-          <Button>
-            <FontAwesomeIcon icon={faPrint} />
-            Print Notecards
-          </Button>
-        </div>
-        <Divider className="my-4" />
-        <div className="flex flex-1 justify-between gap-32">
-          <button
-            className=""
-            onClick={() => setFlashcardNum((prev) => prev - 1)}
-            disabled={flashcardNum === 1}
-          >
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
-          <div className="flex-1">
-            <Notecard
-              question={currentFlashcard.question}
-              answer={currentFlashcard.answer}
-            />
-          </div>
-          <button
-            onClick={() => setFlashcardNum((prev) => prev + 1)}
-            disabled={flashcardNum === upload?.noteCards.length}
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </button>
-        </div>
-        <div className="text-center mt-4">
-          <Text>{`Viewing ${flashcardNum} out of ${upload?.noteCards.length}`}</Text>
-        </div>
+      <div className="items-center justify-between">
+        <Tabs
+          headerRight={
+            <Button>
+              <FontAwesomeIcon icon={faPrint} />
+              Print Notecards
+            </Button>
+          }
+          tabs={[
+            {
+              name: "Focused",
+              children: (
+                <>
+                  <div className="flex flex-1 justify-between gap-32">
+                    <button
+                      className=""
+                      onClick={() => setFlashcardNum((prev) => prev - 1)}
+                      disabled={flashcardNum === 1}
+                    >
+                      <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                    <div className="flex-1">
+                      <Notecard
+                        question={currentFlashcard.question}
+                        answer={currentFlashcard.answer}
+                      />
+                    </div>
+                    <button
+                      onClick={() => setFlashcardNum((prev) => prev + 1)}
+                      disabled={flashcardNum === upload?.noteCards.length}
+                    >
+                      <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                  </div>
+                  <div className="text-center mt-4">
+                    <Text>{`Viewing ${flashcardNum} out of ${upload?.noteCards.length}`}</Text>
+                  </div>
+                </>
+              ),
+            },
+            {
+              name: "Grid",
+              children: (
+                <div className="flex flex-wrap gap-4">
+                  {upload.noteCards.map((nc) => (
+                    <Notecard
+                      answer={nc.answer}
+                      question={nc.question}
+                      key={nc.id}
+                    />
+                  ))}
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
     </div>
   );

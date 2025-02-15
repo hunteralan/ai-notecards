@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { type MetaFunction } from "react-router";
+import { redirect, type MetaFunction } from "react-router";
 import { requireAuthentication } from "~/services/auth.server";
 
 export function meta(): ReturnType<MetaFunction> {
@@ -8,6 +8,8 @@ export function meta(): ReturnType<MetaFunction> {
 
 export async function loader({ request }: Route.LoaderArgs) {
   await requireAuthentication(request);
+
+  return redirect("/classes");
 }
 
 export default function Home() {
