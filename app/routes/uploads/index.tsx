@@ -1,6 +1,6 @@
 import { requireAuthentication } from "~/services/auth.server";
 import type { Route } from "./+types";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useSearchParams } from "react-router";
 import { Notecard } from "~/components/extensions/notecard";
 import { Breadcrumbs } from "~/components/base/breadcrumbs";
 import { Button } from "~/components/base/button";
@@ -11,7 +11,7 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import { Text } from "~/components/base/text";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { getUploadGroupbyId } from "~/operations/getUploadGroupById";
 import { Tabs } from "~/components/extensions/Tabs";
 
@@ -64,7 +64,7 @@ export default function Index() {
               name: "Focused",
               children: (
                 <>
-                  <div className="flex flex-1 justify-between gap-32">
+                  <div className="flex flex-1 justify-between gap-4">
                     <button
                       className=""
                       onClick={() => setFlashcardNum((prev) => prev - 1)}
@@ -72,12 +72,10 @@ export default function Index() {
                     >
                       <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
-                    <div className="flex-1">
-                      <Notecard
-                        question={currentFlashcard.question}
-                        answer={currentFlashcard.answer}
-                      />
-                    </div>
+                    <Notecard
+                      question={currentFlashcard.question}
+                      answer={currentFlashcard.answer}
+                    />
                     <button
                       onClick={() => setFlashcardNum((prev) => prev + 1)}
                       disabled={flashcardNum === upload?.noteCards.length}
@@ -92,9 +90,9 @@ export default function Index() {
               ),
             },
             {
-              name: "Grid",
+              name: "List",
               children: (
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap flex-1 justify-center gap-4">
                   {upload.noteCards.map((nc) => (
                     <Notecard
                       answer={nc.answer}

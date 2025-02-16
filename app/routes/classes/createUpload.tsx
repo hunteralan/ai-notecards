@@ -11,6 +11,8 @@ import { newUploadGroup } from "~/schemas/newUploadGroup";
 import { generateFlashcardRespone } from "~/operations/generateFlashcardResponse";
 import { saveUploadGroup } from "~/operations/saveUploadGroup";
 import type { Route } from "./+types/createUpload";
+import OpenAI from "openai";
+import { supportedMimeTypes } from "~/constants/supportedMimeTypes";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const user = await requireAuthentication(request);
@@ -18,6 +20,11 @@ export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
 
   const files = formData.getAll("files") as File[];
+
+  // If a mime type is uploaded that is not supported, throw
+  if (files.some((file) => !supportedMimeTypes.includes(file.type))) {
+    throw new Error("You can only upload images!");
+  }
 
   const { numCards, uploadName } = await parseFormData(
     formData,

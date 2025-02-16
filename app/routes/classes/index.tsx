@@ -50,8 +50,10 @@ export default function Index() {
       {classes.length ? (
         <Table>
           <TableHead>
-            <TableHeader>Class Name</TableHeader>
-            <TableHeader align="right">Actions</TableHeader>
+            <TableRow>
+              <TableHeader>Class Name</TableHeader>
+              <TableHeader align="right">Actions</TableHeader>
+            </TableRow>
           </TableHead>
           <TableBody>
             {classes.map((c) => (

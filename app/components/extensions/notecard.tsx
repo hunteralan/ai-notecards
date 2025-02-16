@@ -16,7 +16,7 @@ export function Notecard({ answer, question }: Props) {
       transition={{ duration: 0.6, ease: "easeInOut" }}
       onClick={() => setIsFlipped((prev) => !prev)}
       style={{ transformStyle: "preserve-3d" }}
-      className="min-w-96 dark:bg-black/40 rounded-lg min-h-64 flex items-center justify-center flex-col px-10 cursor-pointer"
+      className="h-104 w-200 dark:bg-black/40 rounded-lg flex items-center justify-center flex-col px-10 cursor-pointer"
     >
       <div
         className="absolute w-full h-full flex flex-col px-10 items-center justify-center rounded-xl shadow-lg"

@@ -11,7 +11,7 @@ export function Tabs({ tabs, headerRight }: Props) {
   return (
     <TabGroup>
       <div className="flex justify-between">
-        <div>
+        <div className="flex items-center">
           <TabList className="flex gap-4">
             {tabs.map((t) => (
               <Tab

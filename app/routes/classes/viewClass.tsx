@@ -66,19 +66,31 @@ export default function ViewClass() {
       {classDetails?.UploadGroup.length ? (
         <Table>
           <TableHead>
-            <TableHeader>Name</TableHeader>
-            <TableHeader># of attachments</TableHeader>
-            <TableHeader># of Notecards</TableHeader>
-            <TableHeader>Uploaded At</TableHeader>
-            <TableHeader />
+            <TableRow>
+              <TableHeader>Name</TableHeader>
+              <TableHeader className="max-md:hidden">
+                # of attachments
+              </TableHeader>
+              <TableHeader className="max-md:hidden">
+                # of Notecards
+              </TableHeader>
+              <TableHeader className="max-md:hidden">Uploaded At</TableHeader>
+              <TableHeader />
+            </TableRow>
           </TableHead>
           <TableBody>
             {classDetails.UploadGroup.map((ug) => (
               <TableRow key={ug.id}>
                 <TableCell>{ug.name}</TableCell>
-                <TableCell>{ug._count.files}</TableCell>
-                <TableCell>{ug._count.noteCards}</TableCell>
-                <TableCell>{ug.createdAt.toDateString()}</TableCell>
+                <TableCell className="max-md:hidden">
+                  {ug._count.files}
+                </TableCell>
+                <TableCell className="max-md:hidden">
+                  {ug._count.noteCards}
+                </TableCell>
+                <TableCell className="max-md:hidden">
+                  {ug.createdAt.toDateString()}
+                </TableCell>
                 <TableCell align="right">
                   <Button color="blue" href={`/uploads/${ug.id}`}>
                     Go to upload

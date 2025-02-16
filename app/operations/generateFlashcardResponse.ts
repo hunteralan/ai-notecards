@@ -12,7 +12,7 @@ export async function generateFlashcardRespone(
   const content: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
     {
       type: "text",
-      text: `I need ${numCards} flashcards based on the most important information contained within the photo`,
+      text: `I need ${numCards} flashcards based on the most important information contained within the photo.`,
     },
   ];
 
