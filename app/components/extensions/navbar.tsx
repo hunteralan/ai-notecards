@@ -20,11 +20,11 @@ export function Navbar({ picture, name }: Props) {
     <Sidebar>
       <SidebarHeader>CardCrafter</SidebarHeader>
       <SidebarBody>
-        <SidebarItem href="/">Home</SidebarItem>
+        {/* <SidebarItem href="/">Home</SidebarItem> */}
         <SidebarItem href="/classes">My Classes</SidebarItem>
       </SidebarBody>
       <SidebarFooter>
-        <SidebarItem disabled>
+        <SidebarItem>
           <Avatar src={picture} />
           {name}
         </SidebarItem>

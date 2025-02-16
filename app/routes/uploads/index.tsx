@@ -1,7 +1,7 @@
 import { requireAuthentication } from "~/services/auth.server";
 import type { Route } from "./+types";
 import { useLoaderData, useSearchParams } from "react-router";
-import { Notecard } from "~/components/extensions/notecard";
+import { Notecard, type NotecardRef } from "~/components/extensions/notecard";
 import { Breadcrumbs } from "~/components/base/breadcrumbs";
 import { Button } from "~/components/base/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,9 +11,10 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import { Text } from "~/components/base/text";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { getUploadGroupbyId } from "~/operations/getUploadGroupById";
 import { Tabs } from "~/components/extensions/Tabs";
+import { sleep } from "~/helpers/sleep";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const user = await requireAuthentication(request);
@@ -24,8 +25,28 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export default function Index() {
   const upload = useLoaderData<typeof loader>();
   const [flashcardNum, setFlashcardNum] = useState(1);
+  const ref = useRef<NotecardRef>(null);
 
   const currentFlashcard = upload?.noteCards[flashcardNum - 1];
+
+  const handleFlip = useCallback(async (handler: () => void) => {
+    const shouldSleep = ref.current?.isFlipped;
+
+    if (shouldSleep) {
+      ref.current?.flipcard();
+      await sleep(handler, 100);
+    }
+
+    handler();
+  }, []);
+
+  const goForward = useCallback(async () => {
+    handleFlip(() => setFlashcardNum((prev) => prev + 1));
+  }, []);
+
+  const goBack = useCallback(async () => {
+    handleFlip(() => setFlashcardNum((prev) => prev - 1));
+  }, []);
 
   if (upload?.noteCards.length === 0) {
     return <div>There are no flashcards to display</div>;
@@ -67,17 +88,18 @@ export default function Index() {
                   <div className="flex flex-1 justify-between gap-4">
                     <button
                       className=""
-                      onClick={() => setFlashcardNum((prev) => prev - 1)}
+                      onClick={goBack}
                       disabled={flashcardNum === 1}
                     >
                       <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
                     <Notecard
+                      ref={ref}
                       question={currentFlashcard.question}
                       answer={currentFlashcard.answer}
                     />
                     <button
-                      onClick={() => setFlashcardNum((prev) => prev + 1)}
+                      onClick={goForward}
                       disabled={flashcardNum === upload?.noteCards.length}
                     >
                       <FontAwesomeIcon icon={faChevronRight} />

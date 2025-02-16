@@ -52,6 +52,7 @@ export default function Index() {
           <TableHead>
             <TableRow>
               <TableHeader>Class Name</TableHeader>
+              <TableHeader className="max-md:hidden"># of Uploads</TableHeader>
               <TableHeader align="right">Actions</TableHeader>
             </TableRow>
           </TableHead>
@@ -59,6 +60,9 @@ export default function Index() {
             {classes.map((c) => (
               <TableRow key={c.id}>
                 <TableCell>{c.className}</TableCell>
+                <TableCell className="max-md:hidden">
+                  {c._count.UploadGroup}
+                </TableCell>
                 <TableCell align="right">
                   <Button color="blue" href={`/classes/${c.id}`}>
                     Go to class
