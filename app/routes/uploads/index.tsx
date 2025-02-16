@@ -1,25 +1,19 @@
 import { requireAuthentication } from "~/services/auth.server";
 import type { Route } from "./+types";
-import {
-  useLoaderData,
-  useLocation,
-  useNavigation,
-  useSearchParams,
-} from "react-router";
+import { useLoaderData, useLocation } from "react-router";
 import { Notecard, type NotecardRef } from "~/components/extensions/notecard";
 import { Breadcrumbs } from "~/components/base/breadcrumbs";
-import { Button } from "~/components/base/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
-  faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import { Text } from "~/components/base/text";
 import { useCallback, useRef, useState } from "react";
 import { getUploadGroupbyId } from "~/operations/getUploadGroupById";
 import { Tabs } from "~/components/extensions/Tabs";
 import { sleep } from "~/helpers/sleep";
+import { PrintButton } from "~/components/extensions/printButton";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const user = await requireAuthentication(request);
@@ -81,10 +75,11 @@ export default function Index() {
       <div className="items-center justify-between">
         <Tabs
           headerRight={
-            <Button target="_blank" href={`${location.pathname}/print`}>
-              <FontAwesomeIcon icon={faPrint} />
-              Print Notecards
-            </Button>
+            <PrintButton
+              title="Print Notecards"
+              newWindow
+              href={`${location.pathname}/print`}
+            />
           }
           tabs={[
             {
