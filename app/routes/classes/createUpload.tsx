@@ -11,7 +11,6 @@ import { newUploadGroup } from "~/schemas/newUploadGroup";
 import { generateFlashcardRespone } from "~/operations/generateFlashcardResponse";
 import { saveUploadGroup } from "~/operations/saveUploadGroup";
 import type { Route } from "./+types/createUpload";
-import OpenAI from "openai";
 import { supportedMimeTypes } from "~/constants/supportedMimeTypes";
 
 export async function action({ request, params }: Route.ActionArgs) {
