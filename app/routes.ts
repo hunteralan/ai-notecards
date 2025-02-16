@@ -23,5 +23,10 @@ export default [
     ]),
   ]),
 
-  ...prefix("uploads", [route(":uploadId", "routes/uploads/index.tsx")]),
+  ...prefix("uploads", [
+    ...prefix(":uploadId", [
+      index("routes/uploads/index.tsx"),
+      route("print", "routes/uploads/print.tsx"),
+    ]),
+  ]),
 ] satisfies RouteConfig;

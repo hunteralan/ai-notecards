@@ -1,6 +1,11 @@
 import { requireAuthentication } from "~/services/auth.server";
 import type { Route } from "./+types";
-import { useLoaderData, useSearchParams } from "react-router";
+import {
+  useLoaderData,
+  useLocation,
+  useNavigation,
+  useSearchParams,
+} from "react-router";
 import { Notecard, type NotecardRef } from "~/components/extensions/notecard";
 import { Breadcrumbs } from "~/components/base/breadcrumbs";
 import { Button } from "~/components/base/button";
@@ -26,6 +31,7 @@ export default function Index() {
   const upload = useLoaderData<typeof loader>();
   const [flashcardNum, setFlashcardNum] = useState(1);
   const ref = useRef<NotecardRef>(null);
+  const location = useLocation();
 
   const currentFlashcard = upload?.noteCards[flashcardNum - 1];
 
@@ -75,7 +81,7 @@ export default function Index() {
       <div className="items-center justify-between">
         <Tabs
           headerRight={
-            <Button>
+            <Button target="_blank" href={`${location.pathname}/print`}>
               <FontAwesomeIcon icon={faPrint} />
               Print Notecards
             </Button>
