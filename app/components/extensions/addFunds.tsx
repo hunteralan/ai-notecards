@@ -4,13 +4,14 @@ import { Button } from "../base/button";
 import { Strong, Text } from "../base/text";
 import { Input } from "../base/input";
 import { useState } from "react";
+import { formatMoney } from "~/helpers/formatMoney";
 
 type Props = {
   walletAmt: number;
 };
 
 export default function AddFunds({ walletAmt }: Props) {
-  const [addAmt, setAddAmt] = useState(0);
+  const [addAmt, setAddAmt] = useState<number | undefined>();
   return (
     <section
       aria-labelledby="summary-heading"
@@ -22,7 +23,7 @@ export default function AddFunds({ walletAmt }: Props) {
           className="text-lg flex justify-between font-medium text-gray-900"
         >
           <Text>Wallet</Text>
-          <Strong>${walletAmt.toFixed(2)}</Strong>
+          <Strong>${formatMoney(walletAmt)}</Strong>
         </h2>
 
         <div className="mt-6 mb-6">
@@ -44,7 +45,7 @@ export default function AddFunds({ walletAmt }: Props) {
               onChange={(e) => setAddAmt(parseInt(e.target.value))}
             />
             <Button
-              disabled={addAmt <= 0}
+              disabled={!addAmt || addAmt <= 0}
               type="submit"
               color="green"
               className="whitespace-nowrap"

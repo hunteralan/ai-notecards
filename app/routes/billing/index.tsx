@@ -15,6 +15,7 @@ import {
 } from "~/components/base/table";
 import clsx from "clsx";
 import { SquarePaymentStatus } from "@prisma/client";
+import { formatMoney } from "~/helpers/formatMoney";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireAuthentication(request);
@@ -72,9 +73,9 @@ export default function Billing() {
                         positiveTrx ? "text-green-500" : "text-red-500"
                       )}
                     >
-                      {`${positiveTrx ? "+" : "-"}$${Math.abs(
-                        transaction.amount
-                      ).toFixed(2)}`}
+                      {`${positiveTrx ? "+" : "-"}$${formatMoney(
+                        Math.abs(transaction.amount)
+                      )}`}
                     </TableCell>
                   </TableRow>
                 );
