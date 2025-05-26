@@ -9,26 +9,18 @@ import {
   useLoaderData,
 } from "react-router";
 import type { Route } from "./+types/root";
-import "./app.css";
+import appCss from "./app.css?url";
 import { SidebarLayout } from "./components/base/sidebar-layout";
 import { Navbar } from "./components/extensions/navbar";
 import React, { useEffect } from "react";
 import { getUserFromSession } from "./services/session.server";
 import { getToast } from "remix-toast";
 import { ToastContainer, toast as notify } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toastCss from "react-toastify/dist/ReactToastify.css?url";
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
+  { rel: "stylesheet", href: appCss },
+  { rel: "stylesheet", href: toastCss },
 ];
 
 export async function loader({ request }: Route.LoaderArgs) {
