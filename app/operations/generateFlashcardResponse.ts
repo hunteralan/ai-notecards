@@ -4,6 +4,8 @@ import getOpenAiClient from "~/helpers/getOpenAIClient";
 import type { Flashcard } from "~/types/flashcard";
 import { flashcards as flashcardsSchema } from "~/schemas/flashcards";
 import { getFileDataUrl } from "~/helpers/getFileDataUrl";
+import fs from "fs";
+import { supportedMimeTypes } from "~/constants/supportedMimeTypes";
 
 export async function generateFlashcardRespone(
   numCards: number,
@@ -17,10 +19,19 @@ export async function generateFlashcardRespone(
   ];
 
   for (const file of files) {
-    content.push({
-      type: "image_url",
-      image_url: { url: await getFileDataUrl(file) },
-    });
+    switch (file.type) {
+      case supportedMimeTypes[0]:
+        content.push({
+          type: "file",
+          file: { filename: file.name, file_data: await getFileDataUrl(file) },
+        });
+        break;
+      default:
+        content.push({
+          type: "image_url",
+          image_url: { url: await getFileDataUrl(file) },
+        });
+    }
   }
 
   const client = getOpenAiClient();

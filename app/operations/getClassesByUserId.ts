@@ -7,7 +7,7 @@ export async function getClassesByUserId(userId: number) {
     include: {
       _count: {
         select: {
-          UploadGroup: true,
+          uploadGroup: true,
         },
       },
     },

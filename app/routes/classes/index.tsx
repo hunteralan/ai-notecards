@@ -16,7 +16,6 @@ import { NewClassModal } from "~/components/extensions/newClassModal";
 import { useState } from "react";
 import { getClassesByUserId } from "~/operations/getClassesByUserId";
 import { Text } from "~/components/base/text";
-import { Divider } from "~/components/base/divider";
 import { Breadcrumbs } from "~/components/base/breadcrumbs";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -61,7 +60,7 @@ export default function Index() {
               <TableRow key={c.id}>
                 <TableCell>{c.className}</TableCell>
                 <TableCell className="max-md:hidden">
-                  {c._count.UploadGroup}
+                  {c._count.uploadGroup}
                 </TableCell>
                 <TableCell align="right">
                   <Button color="blue" href={`/classes/${c.id}`}>

@@ -63,7 +63,7 @@ export default function ViewClass() {
         </div>
       </div>
       <Divider className="my-4" />
-      {classDetails?.UploadGroup.length ? (
+      {classDetails?.uploadGroup.length ? (
         <Table>
           <TableHead>
             <TableRow>
@@ -79,7 +79,7 @@ export default function ViewClass() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {classDetails.UploadGroup.map((ug) => (
+            {classDetails.uploadGroup.map((ug) => (
               <TableRow key={ug.id}>
                 <TableCell>{ug.name}</TableCell>
                 <TableCell className="max-md:hidden">

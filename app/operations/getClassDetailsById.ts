@@ -8,7 +8,7 @@ export async function getClassDetailsById(id: number, userId: number) {
       userId,
     },
     include: {
-      UploadGroup: {
+      uploadGroup: {
         orderBy: {
           createdAt: "desc",
         },
