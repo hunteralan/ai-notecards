@@ -8,7 +8,10 @@ import {
 } from "../base/sidebar";
 import { Text } from "../base/text";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMoneyCheck,
+  faRightToBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
   picture: string;
@@ -26,7 +29,11 @@ export function Navbar({ picture, name }: Props) {
       <SidebarFooter>
         <SidebarItem>
           <Avatar src={picture} />
-          {name}
+          <Text>{name}</Text>
+        </SidebarItem>
+        <SidebarItem href="/billing">
+          <FontAwesomeIcon icon={faMoneyCheck} />
+          <Text>Billing</Text>
         </SidebarItem>
         <SidebarItem href="/auth/logout">
           <FontAwesomeIcon icon={faRightToBracket} />

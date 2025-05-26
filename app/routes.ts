@@ -29,4 +29,12 @@ export default [
       route("print", "routes/uploads/print.tsx"),
     ]),
   ]),
+
+  ...prefix("billing", [
+    index("routes/billing/index.tsx"),
+    ...prefix("order", [
+      route("complete", "routes/billing/order/complete.tsx"),
+      route("create", "routes/billing/order/create.tsx"),
+    ]),
+  ]),
 ] satisfies RouteConfig;

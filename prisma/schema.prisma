@@ -92,8 +92,13 @@ model Transaction {
   createdAt DateTime @default(now())
   amount Decimal
 
-  note String
+  note String?
   transactionType TransactionType
+
+  status SquarePaymentStatus
+
+  providerKey String? @unique
+  provider PaymentProvider?
 
   userId Int
   user User @relation(fields: [userId], references: [id])
@@ -102,4 +107,16 @@ model Transaction {
 enum TransactionType {
   CREDIT
   DEBIT
+}
+
+enum PaymentProvider {
+  SQUARE
+}
+
+enum SquarePaymentStatus {
+  APPROVED
+  PENDING
+  COMPLETED
+  CANCELED
+  FAILED
 }
