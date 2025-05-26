@@ -9,6 +9,7 @@ import {
 import { Text } from "../base/text";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBookOpen,
   faMoneyCheck,
   faRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
@@ -28,17 +29,19 @@ export function Navbar({ picture, name }: Props) {
         </Link>
       </SidebarHeader>
       <SidebarBody>
-        {/* <SidebarItem href="/">Home</SidebarItem> */}
-        <SidebarItem href="/classes">My Classes</SidebarItem>
+        <SidebarItem href="/classes">
+          <FontAwesomeIcon icon={faBookOpen} />
+          <Text>My Classes</Text>
+        </SidebarItem>
+        <SidebarItem href="/billing">
+          <FontAwesomeIcon icon={faMoneyCheck} />
+          <Text>Billing</Text>
+        </SidebarItem>
       </SidebarBody>
       <SidebarFooter>
         <SidebarItem>
           <Avatar src={picture} />
           <Text>{name}</Text>
-        </SidebarItem>
-        <SidebarItem href="/billing">
-          <FontAwesomeIcon icon={faMoneyCheck} />
-          <Text>Billing</Text>
         </SidebarItem>
         <SidebarItem href="/auth/logout">
           <FontAwesomeIcon icon={faRightToBracket} />
