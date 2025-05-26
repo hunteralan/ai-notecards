@@ -23,6 +23,11 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const amount = parseInt(formData.get("add-amt")?.toString() ?? "0");
 
+  if (amount <= 0) {
+    // return with invalid request
+    return redirect("/billing");
+  }
+
   const response = await client.checkout.paymentLinks.create({
     idempotencyKey, // For safety
     quickPay: {
@@ -54,6 +59,7 @@ export async function action({ request }: ActionFunctionArgs) {
           id: user.id,
         },
       },
+      note: "Add funds to wallet",
       provider: PaymentProvider.SQUARE,
     },
   });

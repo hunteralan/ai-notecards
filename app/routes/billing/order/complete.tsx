@@ -17,6 +17,7 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } catch {
     console.warn(`Tried updating nonexistent order: ${orderKey}`);
+    return new Response(null, { status: 500 });
   }
 
   return new Response(null, { status: 200 });

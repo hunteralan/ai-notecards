@@ -12,6 +12,9 @@ import { generateFlashcardRespone } from "~/operations/generateFlashcardResponse
 import { saveUploadGroup } from "~/operations/saveUploadGroup";
 import type { Route } from "./+types/createUpload";
 import { supportedMimeTypes } from "~/constants/supportedMimeTypes";
+import { buyFlashcards } from "~/operations/buyFlashcards";
+import { setOrderStatus } from "~/operations/setOrderStatus";
+import { SquarePaymentStatus } from "@prisma/client";
 
 export async function action({ request, params }: Route.ActionArgs) {
   const user = await requireAuthentication(request);
@@ -30,7 +33,13 @@ export async function action({ request, params }: Route.ActionArgs) {
     newUploadGroup
   );
 
+  const transaction = await buyFlashcards(user.id, numCards);
+
   const flashcards = await generateFlashcardRespone(numCards, files);
+
+  if (flashcards.length) {
+    setOrderStatus(transaction.id, SquarePaymentStatus.COMPLETED);
+  }
 
   const classId = params.classId;
   const parsedClassId = parseInt(classId);

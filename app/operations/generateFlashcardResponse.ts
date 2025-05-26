@@ -4,7 +4,6 @@ import getOpenAiClient from "~/helpers/getOpenAIClient";
 import type { Flashcard } from "~/types/flashcard";
 import { flashcards as flashcardsSchema } from "~/schemas/flashcards";
 import { getFileDataUrl } from "~/helpers/getFileDataUrl";
-import fs from "fs";
 import { supportedMimeTypes } from "~/constants/supportedMimeTypes";
 
 export async function generateFlashcardRespone(
@@ -14,7 +13,7 @@ export async function generateFlashcardRespone(
   const content: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
     {
       type: "text",
-      text: `I need ${numCards} flashcards based on the most important information contained within the photo.`,
+      text: `I need ${numCards} flashcards on most important information in file.`,
     },
   ];
 
