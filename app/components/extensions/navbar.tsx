@@ -12,6 +12,7 @@ import {
   faMoneyCheck,
   faRightToBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router";
 
 type Props = {
   picture: string;
@@ -21,7 +22,11 @@ type Props = {
 export function Navbar({ picture, name }: Props) {
   return (
     <Sidebar>
-      <SidebarHeader>CardCrafter</SidebarHeader>
+      <SidebarHeader>
+        <Link to="/" className="flex items-center flex-1 justify-center">
+          <img src="/logo.png" className="h-16 object-contain" />
+        </Link>
+      </SidebarHeader>
       <SidebarBody>
         {/* <SidebarItem href="/">Home</SidebarItem> */}
         <SidebarItem href="/classes">My Classes</SidebarItem>
