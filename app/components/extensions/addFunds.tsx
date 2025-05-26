@@ -1,9 +1,6 @@
-"use client";
-
 import { Button } from "../base/button";
 import { Strong, Text } from "../base/text";
 import { Input } from "../base/input";
-import { useState } from "react";
 import { formatMoney } from "~/helpers/formatMoney";
 
 type Props = {
@@ -11,7 +8,6 @@ type Props = {
 };
 
 export default function AddFunds({ walletAmt }: Props) {
-  const [addAmt, setAddAmt] = useState<number | undefined>();
   return (
     <section
       aria-labelledby="summary-heading"
@@ -37,19 +33,12 @@ export default function AddFunds({ walletAmt }: Props) {
             <Input
               min={0}
               placeholder="$0.00"
-              value={addAmt}
               id="add-amt"
               name="add-amt"
               type="number"
               className="block w-full rounded-md text-base text-gray-900 placeholder:text-gray-400 sm:text-sm/6"
-              onChange={(e) => setAddAmt(parseInt(e.target.value))}
             />
-            <Button
-              disabled={!addAmt || addAmt <= 0}
-              type="submit"
-              color="green"
-              className="whitespace-nowrap"
-            >
+            <Button type="submit" color="green" className="whitespace-nowrap">
               Add Funds
             </Button>
           </div>

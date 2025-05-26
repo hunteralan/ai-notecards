@@ -2,8 +2,8 @@ import { Divider } from "~/components/base/divider";
 import { Text } from "~/components/base/text";
 import { Provider } from "~/constants/providers";
 import { authenticator } from "~/services/auth.server";
-import type { Route } from "./+types";
 import { Form } from "react-router";
+import type { Route } from "./+types/signIn";
 
 export async function action({ request }: Route.ActionArgs) {
   await authenticator.authenticate(Provider.GOOGLE, request);

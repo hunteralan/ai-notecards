@@ -1,5 +1,4 @@
 import { requireAuthentication } from "~/services/auth.server";
-import type { Route } from "./+types";
 import { redirect, useLoaderData } from "react-router";
 import { Text } from "~/components/base/text";
 import { Divider } from "~/components/base/divider";
@@ -16,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Breadcrumbs } from "~/components/base/breadcrumbs";
 import { getClassDetailsById } from "~/operations/getClassDetailsById";
+import type { Route } from "./+types/viewClass";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const user = await requireAuthentication(request);

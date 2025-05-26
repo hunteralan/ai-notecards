@@ -1,3 +1,5 @@
+"use client";
+
 import { requireAuthentication } from "~/services/auth.server";
 import { Form, useLoaderData, type LoaderFunctionArgs } from "react-router";
 import AddFunds from "~/components/extensions/addFunds";
@@ -43,10 +45,12 @@ export default function Billing() {
         <div className="">
           <Table>
             <TableHead>
-              <TableHeader>Description</TableHeader>
-              <TableHeader>Ordered At</TableHeader>
-              <TableHeader>Status</TableHeader>
-              <TableHeader>Amount</TableHeader>
+              <TableRow>
+                <TableHeader>Description</TableHeader>
+                <TableHeader>Ordered At</TableHeader>
+                <TableHeader>Status</TableHeader>
+                <TableHeader>Amount</TableHeader>
+              </TableRow>
             </TableHead>
             <TableBody>
               {transactionHistory.map((transaction) => {

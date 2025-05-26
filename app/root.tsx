@@ -1,4 +1,5 @@
 import {
+  data,
   isRouteErrorResponse,
   Links,
   Meta,
@@ -11,8 +12,11 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { SidebarLayout } from "./components/base/sidebar-layout";
 import { Navbar } from "./components/extensions/navbar";
-import React from "react";
+import React, { useEffect } from "react";
 import { getUserFromSession } from "./services/session.server";
+import { getToast } from "remix-toast";
+import { ToastContainer, toast as notify } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,7 +33,9 @@ export const links: Route.LinksFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const user = await getUserFromSession(request);
-  return user;
+  const { toast, headers } = await getToast(request);
+
+  return data({ toast, user }, { headers });
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -43,6 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <ToastContainer />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -51,7 +58,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const user = useLoaderData<typeof loader>();
+  const { user, toast } = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    if (toast) {
+      notify(toast.message, { type: toast.type });
+    }
+  }, [toast]);
+
   return user ? (
     <SidebarLayout
       navbar={null}
