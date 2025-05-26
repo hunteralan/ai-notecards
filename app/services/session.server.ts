@@ -9,10 +9,21 @@ type SessionFlashData = {
   error: string;
 };
 
+const cookieSecret =
+  process.env.NODE_ENV === "production"
+    ? process.env.COOKIE_SECRET
+    : "developmentSecret";
+
+if (!cookieSecret) {
+  throw new Error("You have not provided a cookie secret!");
+}
+
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage<SessionData, SessionFlashData>({
     // a Cookie from `createCookie` or the CookieOptions to create one
-    cookie: createCookie("user_session"),
+    cookie: createCookie("user_session", {
+      secrets: [cookieSecret],
+    }),
   });
 
 export { getSession, commitSession, destroySession };
